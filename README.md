@@ -16,8 +16,7 @@ Once run, the app will provide a table containing model parameters and their est
 
 ## R dependencies
 Core:
-* `dplyr`
-* `tidyr`
+* `dplyr`, `tidyr`, `purrr`
 * `drc`
 * `broom`
 
