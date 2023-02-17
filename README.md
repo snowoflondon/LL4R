@@ -17,6 +17,7 @@ Once run, the app will provide a table containing model parameters and their est
 ## R dependencies
 Core:
 * `dplyr`
+* `tidyr`
 * `drc`
 * `broom`
 
@@ -24,6 +25,7 @@ Shiny interface:
 * `DT`
 * `shinythemes`
 * `shinycssloaders`
+* `htmltools`
 
 ## R sessionInfo
 
