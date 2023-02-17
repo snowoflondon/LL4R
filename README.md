@@ -3,6 +3,8 @@ This repository contains the source code for the Shiny web app hosted here: http
 The goal of this web app is to quickly visualize and obtain statistics for dose-response curve fitting performed by the R package `drc` - https://cran.r-project.org/web/packages/drc/index.html.
 
 ## Quick Run-through
+The app currently supports `Single analysis` and `Batch analysis` - for the former, the identifier column must contain one unique ID (i.e., one sample) while the latter supports multiple IDs in the same column with corresponding dose-response values.
+
 The web app accepts text delimited files containing three fields: 
 * the identifier 
 * the concentration of drug
@@ -10,7 +12,7 @@ The web app accepts text delimited files containing three fields:
 
 The header (i.e., column names) for each of the three fields must be entered in the three text fields. Response type (i.e., viability or inhibition - inverses of one another) can be specified in the drop-down. If the response values are in percentages (i.e., between 1-100), the checkbox for *Response as percentage? Check for yes* must be ticked. Otherwise (i.e., if values are in decimals), leave this box unticked. Finally, the app provides the option to set the lower limit constraint to zero. This corresponds to setting the `lowerl` argument within `drc::drm` to `c(-Inf, 0, -Inf, -Inf)`. Leaving this box unticked will fit the model in default settings (i.e., all lower bound constraints are negative infinity).
 
-Once run, the app will provide a table containing model parameters and their estimate errors. This is equivalent to running `broom::tidy` on the model object provided by `drc::drm`. The residual standard error is provided in the rightmost column, and this singular value corresponds to the `rseMat` value in the object returned by `summary()` function on the `drc::drm` model. The dose-response curve, returned by `plot.drc` is provided.
+Once run, the app will provide a table containing model parameters and their estimate errors. This is equivalent to running `broom::tidy` on the model object provided by `drc::drm`. The residual standard error is provided in the rightmost column, and this singular value corresponds to the `rseMat` value in the object returned by `summary()` function on the `drc::drm` model. The dose-response curve, returned by `plot.drc` is provided for single analysis.
 
 ## R dependencies
 Core:
