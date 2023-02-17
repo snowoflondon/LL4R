@@ -6,7 +6,7 @@ restypeChoices <- c('Viability', 'Inhibition')
 
 fluidPage(
   theme = shinytheme('journal'),
-  titlePanel('LL4R experimental'),
+  titlePanel('LL4R - dose response fitting using the drc package'),
   tabsetPanel(
     tabPanel('Single analysis',
       fluidRow(
@@ -32,10 +32,16 @@ fluidPage(
                                label = 'Response as percentage? Check for yes ',
                                value = FALSE),
                  checkboxInput(inputId = 'lowerlimSelect',
-                               label = 'Constrain lower bound at zero? ',
+                               label = 'Constrain lower bound at zero? Check for yes',
                                value = FALSE),
                  actionButton(inputId = 'buttonSelect',
-                              label = 'Run single analysis')
+                              label = 'Run single analysis'),
+                 a(href = 'https://cran.r-project.org/web/packages/drc/index.html',
+                   'Run using R package drc by Ritz et al',
+                   style = 'color: blue;'),
+                 a(href = 'https://github.com/snowoflondon/LL4R',
+                   'Shiny app source code and documentation',
+                   style = 'color: blue;')
                )),
           column(width = 8,
                  DT::dataTableOutput(outputId = 'tableOut') %>%
@@ -45,6 +51,17 @@ fluidPage(
         column(width = 5, style = "height: 600vh;",
                plotOutput(outputId = 'plotOut') %>%
                  shinycssloaders::withSpinner(color = "#0dc5c1"))
+      ),
+      fluidRow(
+        column(width = 12,
+               verticalLayout(
+                 a(href = 'https://rdrr.io/cran/drc/', 
+                   'Run using R package drc 
+                   \nRitz C, Baty F, Streibig JC, Gerhard D (2015). 
+                   “Dose-Response Analysis Using R.” PLOS ONE, 10(e0146021)'),
+                 a(href = 'https://github.com/snowoflondon/LL4R',
+                   'Shiny app source code')
+               ))
       )
     ),
     tabPanel('Batch analysis',
@@ -71,11 +88,14 @@ fluidPage(
                                label = 'Response as percentage? Check for yes ',
                                value = FALSE),
                  checkboxInput(inputId = 'lowerlimSelectBatch',
-                               label = 'Constrain lower bound at zero? ',
+                               label = 'Constrain lower bound at zero? Check for yes',
                                value = FALSE),
                  actionButton(inputId = 'buttonSelectBatch',
                               label = 'Run batch analysis')
-               ))
+               )),
+        column(width = 8,
+               DT::dataTableOutput(outputId = 'tableOutBatchSimple') %>%
+                 shinycssloaders::withSpinner(color = "#0dc5c1"))
       ),
       fluidRow(
         column(width = 12,
