@@ -2,6 +2,7 @@ library(tidyverse)
 library(broom)
 library(drc)
 library(DT)
+library(htmltools)
 
 fit_model <- function(x, lc){
   if (lc == TRUE){
@@ -31,21 +32,16 @@ fit_model_batch <- function(x, lc){
   }
   t <- broom::tidy(model)
   s <- summary(model)
-  out <- tibble(
-    'ID' = unique(x$ID),
-    'EC50' = as.numeric(t[4,3]),
-    'EC50_SE' = as.numeric(t[4,4]),
-    'EC50_pVal' = as.numeric(t[4,6]),
-    'Hill' = as.numeric(t[1,3]),
-    'Hill_SE' = as.numeric(t[1,4]),
-    'Hill_pVal' = as.numeric(t[1,6]),
-    'LowerLimit' = as.numeric(t[2,3]),
-    'LowerLimit_SE' = as.numeric(t[2,4]),
-    'LowerLimit_pVal' = as.numeric(t[2,6]),
-    'UpperLimit' = as.numeric(t[3,3]),
-    'UpperLimit_SE' = as.numeric(t[3,4]),
-    'UpperLimit_pVal' = as.numeric(t[3,6]),
-    'RSE' = as.numeric(s$rseMat[1,1])
+  out <- t %>% dplyr::select(-c(curve, statistic)) %>%
+    pivot_longer(-term, names_to = 'Estimate', values_to = 'Values') %>%
+    unite('ID', c(term, Estimate), sep = "_") %>%
+    pivot_wider(names_from = ID, values_from = Values) %>%
+    mutate(RSE = s$rseMat[1,1]) %>%
+    mutate(ID = unique(x$ID))
+  names(out) <- gsub('_estimate', '', names(out))
+  out <- out %>% dplyr::select(
+    c(ID, starts_with('EC'), starts_with('H'), 
+      starts_with('Low'), starts_with('Upp'), RSE)
   )
   return(out)
 }
@@ -53,6 +49,11 @@ fit_model_batch <- function(x, lc){
 server <- function(input, output){
   react_data <- eventReactive(input$buttonSelect, {
     df <- read_csv(input$fileSelect$datapath)
+    validate(need(
+      expr = c(input$idSelect, input$resSelect, input$concSelect) %in%
+        colnames(df) %>% all(),
+      message = 'Error! Ensure input column headers match headers in the file!'
+    ))
     df <- df %>% rename(ID = UQ(sym(input$idSelect)),
                         Response = UQ(sym(input$resSelect)),
                         Conc = UQ(sym(input$concSelect)))
@@ -66,7 +67,22 @@ server <- function(input, output){
     return(df)
   })
   
-  output$tableOut <- DT::renderDataTable({
+  observeEvent(input$lowerlimSelect, {
+    showModal(modalDialog(
+      title = 'Caution!',
+      'Parameter constraints should only be set if
+      user has prior knowlege about the dose-response behavior
+      of sample!',
+      easyClose = TRUE, footer = NULL
+    ))
+  }, ignoreInit = TRUE, once = TRUE)
+  
+  output$tableOut <- DT::renderDataTable(
+    caption = htmltools::tags$caption(style = 'caption-side: top; 
+                                      text-align: center; 
+                                      color:black;  
+                                      font-size:200% ;',
+                                      'LL4 fit estimates result'),{
     if (input$lowerlimSelect == TRUE){
       fit_model(x = react_data(), lc = TRUE)
     } else {
@@ -89,6 +105,11 @@ server <- function(input, output){
   
   react_data_batch <- eventReactive(input$buttonSelectBatch,{
     df <- read_csv(input$fileSelectBatch$datapath)
+    validate(need(
+      expr = c(input$idSelectBatch, input$resSelectBatch, input$concSelectBatch) %in%
+        colnames(df) %>% all(),
+      message = 'Error! Ensure input column headers match headers in the file!'
+    ))
     df <- df %>% rename(ID = UQ(sym(input$idSelectBatch)),
                         Response = UQ(sym(input$resSelectBatch)),
                         Conc = UQ(sym(input$concSelectBatch)))
@@ -114,8 +135,24 @@ server <- function(input, output){
     return(res)
   })
   
-  output$tableOutBatch <- DT::renderDataTable({
+  output$tableOutBatch <- DT::renderDataTable(
+    caption = htmltools::tags$caption(style = 'caption-side: top; 
+                                      text-align: center; 
+                                      color:black;  
+                                      font-size:200% ;',
+                                      'LL4 fit estimates result (detailed)'),{
     react_data_batch()
+  })
+  
+  output$tableOutBatchSimple <- DT::renderDataTable(
+    caption = htmltools::tags$caption(style = 'caption-side: top; 
+                                      text-align: center; 
+                                      color:black;  
+                                      font-size:200% ;',
+                                      'LL4 fit estimates result (condensed)'), {
+    react_data_batch() %>% dplyr::select(
+      c('ID', 'EC50', 'Hill', 'LowerL', 'UpperL', 'RSE')
+    )
   })
   
   output$fileDownloadBatch <- downloadHandler(
