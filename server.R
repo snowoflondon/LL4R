@@ -130,10 +130,20 @@ server <- function(input, output){
       res <- map(df, 
                  possibly(~ fit_model_batch(.x, lc = FALSE), NA))
     }
-    #res <- res[-which(is.na(res))]
+    res <- res[-which(is.na(res))]
     res <- bind_rows(res)
     return(res)
   })
+  
+  observeEvent(input$lowerlimSelectBatch, {
+    showModal(modalDialog(
+      title = 'Caution!',
+      'Parameter constraints should only be set if
+      user has prior knowlege about the dose-response behavior
+      of sample!',
+      easyClose = TRUE, footer = NULL
+    ))
+  }, ignoreInit = TRUE, once = TRUE)
   
   output$tableOutBatch <- DT::renderDataTable(
     caption = htmltools::tags$caption(style = 'caption-side: top; 
