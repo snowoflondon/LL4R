@@ -1,18 +1,28 @@
 # LL4R
 This repository contains the source code for the Shiny web app hosted here: https://brianjmpark.shinyapps.io/ll4r/.
-The goal of this web app is to quickly visualize and obtain statistics for dose-response curve fitting performed by the R package `drc` - https://cran.r-project.org/web/packages/drc/index.html.
+The goal of this web app is to quickly visualize and obtain statistics for dose-response curve fitting performed by the R package `drc` (on [CRAN](https://cran.r-project.org/web/packages/drc/index.html))
 
-## Quick Run-through
-The app currently supports `Single analysis` and `Batch analysis` - for the former, the identifier column must contain one unique ID (i.e., one sample) while the latter supports multiple IDs in the same column with corresponding dose-response values.
+## Tutorial
+Opening the Shiny app via a web browser will show the following interface:
+![Screen Shot 2023-02-21 at 3 34 30 PM](https://user-images.githubusercontent.com/76887483/220452996-dc7f3971-1433-4ff8-9e92-958b77a673b5.png)
 
-The web app accepts text delimited files containing three fields: 
-* the identifier 
-* the concentration of drug
-* the viability/inhibition readout (often obtained via cell plate assays). 
+Tl;dr: User input a delimited text file containing dose-response relationship data for a particular drug/treatment. Three unique columns are needed, which correspond to the unique `identifier`, the `dose` of drug, and the `response` (usually cell viability or inhibition conferred by treatment). 
 
-The header (i.e., column names) for each of the three fields must be entered in the three text fields. Response type (i.e., viability or inhibition - inverses of one another) can be specified in the drop-down. If the response values are in percentages (i.e., between 1-100), the checkbox for *Response as percentage? Check for yes* must be ticked. Otherwise (i.e., if values are in decimals), leave this box unticked. Finally, the app provides the option to set the lower limit constraint to zero. This corresponds to setting the `lowerl` argument within `drc::drm` to `c(-Inf, 0, -Inf, -Inf)`. Leaving this box unticked will fit the model in default settings (i.e., all lower bound constraints are negative infinity).
+The program supports two types of analyses based on the number of unique sample identifiers user wish to analyze. `Single analysis` will fit the `drc::drm` model (using `LL4` curve) on a single drug/treatment (i.e., one unique identifier under the `identifier` column). `Batch analysis` will fit the `LL4` model on multiple identifiers. 
 
-Once run, the app will provide a table containing model parameters and their estimate errors. This is equivalent to running `broom::tidy` on the model object provided by `drc::drm`. The residual standard error is provided in the rightmost column, and this singular value corresponds to the `rseMat` value in the object returned by `summary()` function on the `drc::drm` model. The dose-response curve, returned by `plot.drc` is provided for single analysis.
+* **A**: Tab selection for `Single analysis` or `Batch analysis`
+* **B**: File browser for user input; currently supports .csv and .tsv file formats
+* **C**: Column header name for the column containing the `identifier` in the user input file
+* **D**: Column header name for the column containing the `response` in the user input file
+* **E**: Column header name for the column containing the `dose` in the user input file
+* **F**: User selectinon for the type of `response` in the input data; either viability or inhibition
+* **G**: Checkbox for the `response` data format; check if the `response` values are in percentages (i.e., values between 0-100); leave unchecked if decimals (i.e., values between 0-1); default is unchecked
+* **H**: Checkbox for forcing the lower bound of the `lower limit` parameter of the LL4 model to zero; this is equivalent to setting the `lowerl` parameter within `drc::drm` to `c(-Inf, 0, -Inf, -Inf)`; default is `-Inf`; default is unchecked
+* **I**: Running the analysis provides program output
+* **J**: For `Single analysis`: the `LL4` model estimates will be provided here; this is equivalent to running `broom::tidy` on the `drc::drm` output; for `Batch analysis`: a table containing a summary of `LL4` model estimates will be provided here for each sample, where each row corresponds to a unique sample
+* **K**: For `Single analysis`: the dose-response curve will be shown here; this is equivalent to the `plot.drc` output; for `Batch analysis`: the `LL4` model estimates (i.e., all 4 parameters of the `LL4` with their residual errors and p-values) will be shown here for each compound, where each row corresponds to a unique compound
+
+
 
 ## R dependencies
 Core:
