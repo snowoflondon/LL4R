@@ -3,11 +3,12 @@ This repository contains the source code for the Shiny web app hosted here: http
 The goal of this web app is to quickly visualize and obtain statistics for dose-response curve fitting performed by the R package `drc` (on [CRAN](https://cran.r-project.org/web/packages/drc/index.html))
 
 ## Tutorial
-Opening the Shiny app via a web browser will show the following interface:
-![Screen Shot 2023-02-21 at 3 34 30 PM](https://user-images.githubusercontent.com/76887483/220452996-dc7f3971-1433-4ff8-9e92-958b77a673b5.png)
 
 Tl;dr: User input a delimited text file containing dose-response relationship data for a particular drug/treatment. Three unique columns are needed, which correspond to the unique `identifier`, the `dose` of drug, and the `response` (usually cell viability or inhibition conferred by treatment). 
 
+Opening the Shiny app via a web browser will show the following interface:
+
+![Screen Shot 2023-02-22 at 3 59 50 PM](https://user-images.githubusercontent.com/76887483/220758212-8a8fc404-4d77-4d52-aacb-99280943f901.png)
 The program supports two types of analyses based on the number of unique sample identifiers user wish to analyze. `Single analysis` will fit the `drc::drm` model (using `LL4` curve) on a single drug/treatment (i.e., one unique identifier under the `identifier` column). `Batch analysis` will fit the `LL4` model on multiple identifiers. 
 
 * **A**: Tab selection for `Single analysis` or `Batch analysis`
@@ -37,7 +38,7 @@ Shiny interface:
 * `htmltools`
 
 ## R sessionInfo
-
+```{r}
 R version 4.0.5 (2021-03-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Big Sur 11.2.3
@@ -80,3 +81,4 @@ loaded via a namespace (and not attached):
 [73] gtable_0.3.0        openssl_1.4.3       assertthat_0.2.1    cachem_1.0.4       
 [77] openxlsx_4.2.3      mime_0.10           xtable_1.8-4        later_1.2.0        
 [81] survival_3.2-13     memoise_2.0.0       TH.data_1.0-10      ellipsis_0.3.1
+```
