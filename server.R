@@ -125,12 +125,13 @@ server <- function(input, output){
     
     if (input$lowerlimSelectBatch == TRUE){
       res <- map(df, 
-                 possibly(~ fit_model_batch(.x, lc = TRUE), NA))
+                 possibly(~ fit_model_batch(.x, lc = TRUE), NULL)) %>%
+        compact()
     } else {
       res <- map(df, 
-                 possibly(~ fit_model_batch(.x, lc = FALSE), NA))
+                 possibly(~ fit_model_batch(.x, lc = FALSE), NULL)) %>%
+        compact()
     }
-    res <- res[-which(is.na(res))]
     res <- bind_rows(res)
     return(res)
   })
