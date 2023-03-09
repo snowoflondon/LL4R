@@ -1,4 +1,4 @@
-library(tidyverse)
+library(magrittr)
 library(shinythemes)
 library(shinycssloaders)
 
@@ -8,7 +8,7 @@ fluidPage(
   theme = shinytheme('journal'),
   titlePanel('LL4R - dose response fitting using the drc package'),
   tabsetPanel(
-    tabPanel('Single analysis',
+    tabPanel(div('Single analysis', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
@@ -38,10 +38,10 @@ fluidPage(
                               label = 'Run single analysis'),
                  a(href = 'https://cran.r-project.org/web/packages/drc/index.html',
                    'Run using R package drc by Ritz et al',
-                   style = 'color: blue;'),
+                   style = 'color: grey;'),
                  a(href = 'https://github.com/snowoflondon/LL4R',
                    'Shiny app source code and documentation',
-                   style = 'color: blue;')
+                   style = 'color: grey;')
                )),
           column(width = 8,
                  DT::dataTableOutput(outputId = 'tableOut') %>%
@@ -51,20 +51,9 @@ fluidPage(
         column(width = 5, style = "height: 600vh;",
                plotOutput(outputId = 'plotOut') %>%
                  shinycssloaders::withSpinner(color = "#0dc5c1"))
-      ),
-      fluidRow(
-        column(width = 12,
-               verticalLayout(
-                 a(href = 'https://rdrr.io/cran/drc/', 
-                   'Run using R package drc 
-                   \nRitz C, Baty F, Streibig JC, Gerhard D (2015). 
-                   “Dose-Response Analysis Using R.” PLOS ONE, 10(e0146021)'),
-                 a(href = 'https://github.com/snowoflondon/LL4R',
-                   'Shiny app source code')
-               ))
       )
     ),
-    tabPanel('Batch analysis',
+    tabPanel(div('Batch analysis', style = "color: #2f4f4f"),
       fluidRow(
         column(width = 4,
                verticalLayout(
