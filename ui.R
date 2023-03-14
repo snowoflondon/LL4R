@@ -89,7 +89,8 @@ fluidPage(
       fluidRow(
         column(width = 12,
                downloadButton(outputId = 'fileDownloadBatch',
-                              label = 'Download result table'))
+                              label = 'Download result table',
+                              style = "margin-top:5px;"))
       ),
       fluidRow(
         column(width = 12,
