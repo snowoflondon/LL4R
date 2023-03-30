@@ -1,12 +1,24 @@
 library(magrittr)
 library(shinythemes)
 library(shinycssloaders)
+library(bslib)
+library(DT)
+
+theme <- bslib::bs_theme(
+  bg = "#eeeeee", fg = "#252e3c",
+  primary = "#b6d7a8", secondary = "#b6d7a8",
+  base_font = font_google("Roboto Serif", local = TRUE),
+  code_font = c("Courier", "monospace"),
+  heading_font = font_google("Roboto Serif", local = TRUE),
+  "input-border-color" = "#f1ebdd"
+)
 
 restypeChoices <- c('Viability', 'Inhibition')
 
 fluidPage(
-  theme = shinytheme('journal'),
-  titlePanel('LL4R - dose response fitting using the drc package'),
+  theme = theme,
+  titlePanel('LL4R - dose response fitting using the drc package',
+             windowTitle = 'LL4R by snowoflondon'),
   tabsetPanel(
     tabPanel(div('Single analysis', style = "color: #2f4f4f"),
       fluidRow(
