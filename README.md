@@ -8,7 +8,7 @@ Tl;dr: User input a delimited text file containing dose-response relationship da
 
 Opening the Shiny app via a web browser will show the following interface:
 
-![Screen Shot 2023-02-22 at 3 59 50 PM](https://user-images.githubusercontent.com/76887483/220758212-8a8fc404-4d77-4d52-aacb-99280943f901.png)
+![Screen Shot 2023-03-30 at 3 46 00 PM](https://user-images.githubusercontent.com/76887483/228948171-d8a41e42-5415-4ecb-a00c-82707ceff9cc.png)
 The program supports two types of analyses based on the number of unique sample identifiers user wish to analyze. `Single analysis` will fit the `drc::drm` model (using `LL4` curve) on a single drug/treatment (i.e., one unique identifier under the `identifier` column). `Batch analysis` will fit the `LL4` model on multiple identifiers. 
 
 * **A**: Tab selection for `Single analysis` or `Batch analysis`
@@ -20,10 +20,6 @@ The program supports two types of analyses based on the number of unique sample 
 * **G**: Checkbox for the `response` data format; check if the `response` values are in percentages (i.e., values between 0-100); leave unchecked if decimals (i.e., values between 0-1); default is unchecked
 * **H**: Checkbox for forcing the lower bound of the `lower limit` parameter of the LL4 model to zero; this is equivalent to setting the `lowerl` parameter within `drc::drm` to `c(-Inf, 0, -Inf, -Inf)`; default is `-Inf`; default is unchecked
 * **I**: Running the analysis provides program output
-* **J**: For `Single analysis`: the `LL4` model estimates will be provided here; this is equivalent to running `broom::tidy` on the `drc::drm` output; for `Batch analysis`: a table containing a summary of `LL4` model estimates will be provided here for each sample, where each row corresponds to a unique sample
-* **K**: For `Single analysis`: the dose-response curve will be shown here; this is equivalent to the `plot.drc` output; for `Batch analysis`: the `LL4` model estimates (i.e., all 4 parameters of the `LL4` with their residual errors and p-values) will be shown here for each compound, where each row corresponds to a unique compound
-
-
 
 ## R dependencies
 Core:
@@ -33,9 +29,9 @@ Core:
 
 Shiny interface:
 * `DT`
-* `shinythemes`
 * `shinycssloaders`
 * `htmltools`
+* `bslib`
 
 ## R sessionInfo
 ```{r}
