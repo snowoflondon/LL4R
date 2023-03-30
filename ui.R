@@ -10,7 +10,7 @@ theme <- bslib::bs_theme(
   base_font = font_google("Roboto Serif", local = TRUE),
   code_font = c("Courier", "monospace"),
   heading_font = font_google("Roboto Serif", local = TRUE),
-  "input-border-color" = "#f1ebdd"
+  "input-border-color" = "#aaaaaa"
 )
 
 restypeChoices <- c('Viability', 'Inhibition')
